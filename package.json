@@ -1,0 +1,38 @@
+{
+  "name": "draglet",
+  "version": "1.0.0",
+  "description": "A drag and drop shelf app for Windows and macOS",
+  "main": "out/main/index.js",
+  "author": {
+    "name": "Draglet",
+    "email": "sguha1988.life@gmail.com"
+  },
+  "scripts": {
+    "dev": "electron-vite dev",
+    "build": "electron-vite build",
+    "postinstall": "electron-rebuild -f -w uiohook-napi",
+    "dist:win": "npm run build && electron-builder --win",
+    "dist:mac": "npm run build && electron-builder --mac",
+    "dist": "npm run build && electron-builder"
+  },
+  "dependencies": {
+    "auto-launch": "^5.0.6",
+    "uiohook-napi": "^1.5.3"
+  },
+  "devDependencies": {
+    "@electron-toolkit/preload": "^3.0.1",
+    "@electron-toolkit/utils": "^3.0.0",
+    "@electron/rebuild": "^4.0.4",
+    "@types/auto-launch": "^5.0.5",
+    "@types/react": "^18.3.1",
+    "@types/react-dom": "^18.3.0",
+    "@vitejs/plugin-react": "^4.3.1",
+    "electron": "^31.0.0",
+    "electron-builder": "^24.13.3",
+    "electron-vite": "^2.3.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "typescript": "^5.5.2",
+    "vite": "^5.3.1"
+  }
+}
