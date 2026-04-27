@@ -23,7 +23,7 @@ export async function setStartupEnabled(enabled: boolean): Promise<void> {
     app.setLoginItemSettings({
       openAtLogin: enabled,
       openAsHidden: true,
-      name: 'Easy Drop',
+      name: 'Draglet',
       args: ['--hidden']
     })
   } catch (err) {

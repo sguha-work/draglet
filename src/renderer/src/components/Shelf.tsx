@@ -98,7 +98,7 @@ export default function Shelf({ onOpenSettings }: Props): React.ReactElement {
               </defs>
             </svg>
           </div>
-          <span className="shelf__title">Easy Drop</span>
+          <span className="shelf__title">Draglet</span>
         </div>
         <div
           className="shelf__header-right"

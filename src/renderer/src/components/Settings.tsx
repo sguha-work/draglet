@@ -49,7 +49,7 @@ export default function Settings({ onClose }: Props): React.ReactElement {
           <div className="settings__row">
             <div className="settings__row-label">
               <span className="settings__row-title">Launch at startup</span>
-              <span className="settings__row-desc">Open Easy Drop when you log in</span>
+              <span className="settings__row-desc">Open Draglet when you log in</span>
             </div>
             <button
               className={`toggle ${startupEnabled ? 'toggle--on' : ''} ${saving ? 'toggle--saving' : ''}`}
@@ -109,7 +109,7 @@ export default function Settings({ onClose }: Props): React.ReactElement {
               </svg>
             </div>
             <div>
-              <p className="settings__app-name">Easy Drop</p>
+              <p className="settings__app-name">Draglet</p>
               <p className="settings__app-version">Version 1.0.0</p>
             </div>
           </div>

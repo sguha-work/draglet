@@ -68,10 +68,11 @@ html, body {
 .shelf__header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   padding: 12px 14px 10px;
   border-bottom: 1px solid var(--border);
   flex-shrink: 0;
+  position: relative;
 }
 
 .shelf__header-left {
@@ -81,6 +82,8 @@ html, body {
 }
 
 .shelf__header-right {
+  position: absolute;
+  right: 14px;
   display: flex;
   align-items: center;
   gap: 4px;

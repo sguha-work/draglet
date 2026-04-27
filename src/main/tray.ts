@@ -5,7 +5,7 @@ import { showShelf, hideShelf, toggleShelf, getShelfWindow } from './shelf-windo
 let tray: Tray | null = null
 
 export function createTray(): void {
-  const iconPath = join(__dirname, '../../resources/tray-icon.png')
+  const iconPath = join(__dirname, '../../resources/tray-icon.svg')
   let icon: Electron.NativeImage
 
   try {
@@ -23,7 +23,7 @@ export function createTray(): void {
   }
 
   tray = new Tray(icon)
-  tray.setToolTip('Easy Drop')
+  tray.setToolTip('Draglet')
   updateContextMenu()
 
   tray.on('click', () => {
@@ -51,7 +51,7 @@ function updateContextMenu(): void {
     },
     { type: 'separator' },
     {
-      label: 'Quit Easy Drop',
+      label: 'Quit Draglet',
       click: () => app.quit()
     }
   ])

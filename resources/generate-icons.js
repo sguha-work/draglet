@@ -24,19 +24,19 @@ async function generateIcons() {
       console.log(`Generated icon-${size}.png`)
     }
 
-    // Generate main icon.png (512x512)
+    // Generate main icon.svg (512x512)
     await sharp(svgData)
       .resize(512, 512)
       .png()
-      .toFile(path.join(__dirname, 'icon.png'))
-    console.log('Generated icon.png')
+      .toFile(path.join(__dirname, 'icon.svg'))
+    console.log('Generated icon.svg')
 
     // Generate tray icon (22x22 for macOS, 16x16 for Windows)
     await sharp(svgData)
       .resize(32, 32)
       .png()
-      .toFile(path.join(__dirname, 'tray-icon.png'))
-    console.log('Generated tray-icon.png')
+      .toFile(path.join(__dirname, 'tray-icon.svg'))
+    console.log('Generated tray-icon.svg')
 
     await sharp(svgData)
       .resize(64, 64)
@@ -71,12 +71,12 @@ function generatePlaceholderPNGs() {
   const width = 32, height = 32
   const png = createSimplePNG(width, height)
   
-  fs.writeFileSync(path.join(__dirname, 'tray-icon.png'), png)
+  fs.writeFileSync(path.join(__dirname, 'tray-icon.svg'), png)
   fs.writeFileSync(path.join(__dirname, 'tray-icon@2x.png'), png)
   
-  // Create a larger placeholder for icon.png
+  // Create a larger placeholder for icon.svg
   const png256 = createSimplePNG(256, 256)
-  fs.writeFileSync(path.join(__dirname, 'icon.png'), png256)
+  fs.writeFileSync(path.join(__dirname, 'icon.svg'), png256)
   
   console.log('Placeholder icons written.')
 }

@@ -12,7 +12,7 @@ import { extname, basename } from 'path'
 const shelfItems: ShelfItem[] = []
 
 app.whenReady().then(async () => {
-  electronApp.setAppUserModelId('com.easydrop.app')
+  electronApp.setAppUserModelId('com.draglet.app')
 
   app.on('browser-window-created', (_, window) => {
     optimizer.watchWindowShortcuts(window)

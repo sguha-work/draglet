@@ -1,4 +1,4 @@
-# Easy Drop
+#  Draglet
 
 A drag-and-drop shelf app for Windows and macOS, inspired by Dropover. Stage files from multiple locations and drop them wherever you need.
 
@@ -40,7 +40,7 @@ Built installers are output to the `dist/` directory.
 
 ## How to Use
 
-1. **Launch** Easy Drop — it lives in your system tray
+1. **Launch** Draglet — it lives in your system tray
 2. **Shake your mouse** rapidly left-right while hovering over files to open the shelf
 3. **Drag files** onto the shelf from any window
 4. Navigate to your destination
@@ -58,7 +58,7 @@ Built installers are output to the `dist/` directory.
 
 ## Settings
 
-- **Launch at startup** — registers Easy Drop with the OS login items
+- **Launch at startup** — registers Draglet with the OS login items
 - Accessible via the ⚙️ icon in the shelf header
 
 ## Project Structure

@@ -3,7 +3,7 @@ import { join } from 'path'
 import { is } from '@electron-toolkit/utils'
 
 let shelfWindow: BrowserWindow | null = null
-const WINDOW_WIDTH = 320
+const WINDOW_WIDTH = 350
 const WINDOW_HEIGHT = 420
 
 export async function createShelfWindow(): Promise<BrowserWindow> {
@@ -13,16 +13,23 @@ export async function createShelfWindow(): Promise<BrowserWindow> {
   shelfWindow = new BrowserWindow({
     width: WINDOW_WIDTH,
     height: WINDOW_HEIGHT,
+    minWidth: WINDOW_WIDTH,
+    maxWidth: WINDOW_WIDTH,
+    minHeight: WINDOW_HEIGHT,
+    maxHeight: WINDOW_HEIGHT,
     x: width - WINDOW_WIDTH - 24,
     y: Math.floor((height - WINDOW_HEIGHT) / 2),
     show: false,
     frame: false,
     transparent: true,
     resizable: false,
+    minimizable: false,
+    maximizable: false,
     skipTaskbar: true,
     alwaysOnTop: true,
     hasShadow: true,
     roundedCorners: true,
+    opacity: 0.8,
     ...(process.platform === 'darwin'
       ? { vibrancy: 'under-window', visualEffectState: 'active', titleBarStyle: 'hidden' }
       : {}),
@@ -39,6 +46,10 @@ export async function createShelfWindow(): Promise<BrowserWindow> {
   })
 
   shelfWindow.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true })
+
+  if (process.platform === 'darwin') {
+    shelfWindow.setWindowButtonVisibility(false)
+  }
 
   shelfWindow.on('ready-to-show', () => {
     // Don't auto-show; we control visibility

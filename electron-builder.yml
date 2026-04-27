@@ -1,5 +1,5 @@
-appId: com.easydrop.app
-productName: Easy Drop
+appId: com.draglet.app
+productName: Draglet
 directories:
   buildResources: resources
   output: dist
@@ -34,7 +34,7 @@ nsis:
   allowToChangeInstallationDirectory: false
 
 linux:
-  icon: resources/icon.png
+  icon: resources/icon.svg
   target:
     - target: AppImage
       arch:
