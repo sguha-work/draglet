@@ -3,8 +3,8 @@ import { join } from 'path'
 import { is } from '@electron-toolkit/utils'
 
 let shelfWindow: BrowserWindow | null = null
-const WINDOW_WIDTH = 350
-const WINDOW_HEIGHT = 420
+const WINDOW_WIDTH = 250
+const WINDOW_HEIGHT = 270
 
 export async function createShelfWindow(): Promise<BrowserWindow> {
   const display = screen.getPrimaryDisplay()
@@ -29,7 +29,7 @@ export async function createShelfWindow(): Promise<BrowserWindow> {
     alwaysOnTop: true,
     hasShadow: true,
     roundedCorners: true,
-    opacity: 0.8,
+    opacity: 0.7,
     ...(process.platform === 'darwin'
       ? { vibrancy: 'under-window', visualEffectState: 'active', titleBarStyle: 'hidden' }
       : {}),

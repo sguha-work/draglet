@@ -25,7 +25,8 @@ const api = {
   },
   file: {
     getIcon: (filePath: string) => ipcRenderer.invoke('file:get-icon', filePath)
-  }
+  },
+  dragDetected: () => ipcRenderer.send('drag:detected')
 }
 
 if (process.contextIsolated) {

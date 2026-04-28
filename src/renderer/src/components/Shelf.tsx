@@ -142,11 +142,12 @@ export default function Shelf({ onOpenSettings }: Props): React.ReactElement {
           </div>
         ) : (
           <div className="shelf__grid">
-            {items.map((item) => (
+            {items.map((item, index) => (
               <ShelfItem
                 key={item.id}
                 item={item}
                 onRemove={() => handleRemoveItem(item.id)}
+                columnIndex={index % 3}
               />
             ))}
           </div>

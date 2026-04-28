@@ -4,6 +4,7 @@ import type { ShelfItem as ShelfItemType } from '../../../shared/types'
 interface Props {
   item: ShelfItemType
   onRemove: () => void
+  columnIndex: number
 }
 
 const IMAGE_EXTS = new Set(['.png', '.jpg', '.jpeg', '.gif', '.webp', '.bmp', '.svg'])
@@ -102,7 +103,7 @@ function CategoryIcon({ category }: { category: string }): React.ReactElement {
   }
 }
 
-export default function ShelfItem({ item, onRemove }: Props): React.ReactElement {
+export default function ShelfItem({ item, onRemove, columnIndex }: Props): React.ReactElement {
   const [hovered, setHovered] = useState(false)
   const [contextMenu, setContextMenu] = useState(false)
   const category = getFileCategory(item.ext)
@@ -141,7 +142,7 @@ export default function ShelfItem({ item, onRemove }: Props): React.ReactElement
   }, [contextMenu])
 
   const shortName =
-    item.name.length > 14 ? item.name.slice(0, 11) + '…' + (item.ext || '') : item.name
+    item.name.length > 12 ? item.name.slice(0, 9) + '…' + (item.ext || '') : item.name
 
   return (
     <div
@@ -207,7 +208,17 @@ export default function ShelfItem({ item, onRemove }: Props): React.ReactElement
 
       {/* Context menu */}
       {contextMenu && (
-        <div className="context-menu" onClick={(e) => e.stopPropagation()}>
+        <div 
+          className="context-menu" 
+          onClick={(e) => e.stopPropagation()}
+          style={
+            columnIndex === 0 
+              ? { left: '0', transform: 'none' } 
+              : columnIndex === 2 
+                ? { right: '0', left: 'auto', transform: 'none' } 
+                : {}
+          }
+        >
           <button className="context-menu__item" onClick={handleOpen}>Open</button>
           <button className="context-menu__item" onClick={handleReveal}>Show in Folder</button>
           <div className="context-menu__divider" />

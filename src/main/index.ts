@@ -1,8 +1,9 @@
-import { app, BrowserWindow, ipcMain, nativeImage, protocol, shell } from 'electron'
+import { app, BrowserWindow, ipcMain, nativeImage, protocol, shell, screen } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import { createTray } from './tray'
 import { createShelfWindow, getShelfWindow, showShelf, hideShelf } from './shelf-window'
+import { createOverlayWindow, hideOverlay } from './overlay-window'
 import { startDragDetector, stopDragDetector } from './drag-detector'
 import { getStartupStatus, setStartupEnabled } from './startup'
 import { ShelfItem } from '../shared/types'
@@ -19,6 +20,7 @@ app.whenReady().then(async () => {
   })
 
   await createShelfWindow()
+  createOverlayWindow()
   createTray()
   setupIpcHandlers()
   startDragDetector()
@@ -112,6 +114,12 @@ function setupIpcHandlers(): void {
     } catch {
       return null
     }
+  })
+
+  ipcMain.on('drag:detected', () => {
+    const pos = screen.getCursorScreenPoint()
+    showShelf(pos)
+    hideOverlay()
   })
 }
 
