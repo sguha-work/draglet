@@ -60,18 +60,26 @@ function updateContextMenu(): void {
 }
 
 function createFallbackIcon(): Electron.NativeImage {
-  // 16x16 PNG: simple colored square as fallback
   const size = 16
   const pixels = new Uint8Array(size * size * 4)
   for (let i = 0; i < size * size; i++) {
     const x = i % size
     const y = Math.floor(i / size)
-    const inCircle =
-      Math.sqrt(Math.pow(x - size / 2, 2) + Math.pow(y - size / 2, 2)) < size / 2 - 1
-    pixels[i * 4] = inCircle ? 88 : 0
-    pixels[i * 4 + 1] = inCircle ? 166 : 0
-    pixels[i * 4 + 2] = inCircle ? 255 : 0
-    pixels[i * 4 + 3] = inCircle ? 255 : 0
+    
+    // Draw a "D" shape
+    const inVerticalBar = x >= 3 && x <= 5 && y >= 2 && y <= 13
+    const inTopBar = x >= 5 && x <= 8 && y >= 2 && y <= 3
+    const inBottomBar = x >= 5 && x <= 8 && y >= 12 && y <= 13
+    const dx = x - 8
+    const dy = y - 7.5
+    const inCurve = dx >= 0 && (dx * dx + dy * dy) <= 30 && y >= 2 && y <= 13
+
+    const isD = inVerticalBar || inTopBar || inBottomBar || inCurve
+
+    pixels[i * 4] = 0
+    pixels[i * 4 + 1] = 0
+    pixels[i * 4 + 2] = 0
+    pixels[i * 4 + 3] = isD ? 255 : 0
   }
   return nativeImage.createFromBuffer(Buffer.from(pixels), { width: size, height: size })
 }

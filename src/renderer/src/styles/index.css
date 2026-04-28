@@ -68,7 +68,7 @@ html, body {
 .shelf__header {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   padding: 12px 14px 10px;
   border-bottom: 1px solid var(--border);
   flex-shrink: 0;
@@ -106,7 +106,7 @@ html, body {
   background: transparent;
   border: none;
   cursor: pointer;
-  color: var(--text-secondary);
+  color: white;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -137,7 +137,7 @@ html, body {
   font-size: 12px;
   padding: 4px 8px;
   border-radius: 6px;
-  color: var(--text-secondary);
+  color: white;
 }
 
 .shelf__btn--text:hover {
@@ -192,7 +192,7 @@ html, body {
 .shelf__empty-title {
   font-size: 14px;
   font-weight: 600;
-  color: var(--text-secondary);
+  color: white;
   transition: color 0.2s;
 }
 
@@ -202,7 +202,7 @@ html, body {
 
 .shelf__empty-hint {
   font-size: 12px;
-  color: var(--text-tertiary);
+  color: white;
   line-height: 1.5;
   max-width: 180px;
 }
@@ -212,6 +212,7 @@ html, body {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 6px;
+  align-items: start;
 }
 
 /* ─── Footer ──────────────────────────────────────────── */
@@ -226,7 +227,7 @@ html, body {
 
 .shelf__count {
   font-size: 11px;
-  color: var(--text-tertiary);
+  color: white;
 }
 
 /* ─── Drop overlay ────────────────────────────────────── */
@@ -269,116 +270,118 @@ html, body {
 
 /* ─── Shelf Item ──────────────────────────────────────── */
 .shelf-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 5px;
-  cursor: grab;
   position: relative;
-  padding: 4px;
-  border-radius: var(--radius-sm);
-  transition: background 0.15s;
+  height: 28px;
+  z-index: 1;
 }
 
-.shelf-item:active {
-  cursor: grabbing;
+.shelf-item:hover {
+  z-index: 100;
 }
 
-.shelf-item--hovered {
-  background: var(--bg-surface);
-}
-
-.shelf-item__thumb {
-  width: 72px;
-  height: 72px;
-  border-radius: 12px;
-  border: 1px solid;
-  border-color: rgba(0,0,0,0.05);
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(255,255,255,0.6);
-  position: relative;
-  flex-shrink: 0;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-}
-
-.shelf-item__preview-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.shelf-item__icon-img {
-  width: 48px;
-  height: 48px;
-  object-fit: contain;
-}
-
-.shelf-item__fallback-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.shelf-item__badge {
+.shelf-item__pill {
   position: absolute;
-  bottom: 4px;
-  right: 4px;
-  font-size: 8px;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 28px;
+  background: rgba(255, 255, 255, 0.4);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 6px;
+  padding: 0 8px;
+  transition: width 0.2s ease, background 0.2s, box-shadow 0.2s;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+  backdrop-filter: blur(10px);
+  cursor: grab;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.shelf-item:active .shelf-item__pill {
+  cursor: grabbing;
+  transform: scale(0.98);
+}
+
+.shelf-item:hover .shelf-item__pill {
+  width: max-content;
+  max-width: 220px;
+  background: white;
+  border-color: var(--item-color);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  overflow: visible;
+}
+
+.shelf-item__icon-container {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--item-color);
+}
+
+.shelf-item__content {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+.shelf-item__name {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-primary);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.shelf-item:hover .shelf-item__name {
+  white-space: normal;
+  overflow: visible;
+  word-break: break-all;
+}
+
+.shelf-item__ext {
+  font-size: 9px;
   font-weight: 700;
-  letter-spacing: 0.03em;
-  padding: 1px 4px;
-  border-radius: 4px;
-  text-transform: uppercase;
-  backdrop-filter: blur(8px);
-  background: rgba(255, 255, 255, 0.6);
-  color: var(--text-secondary);
-  border: 1px solid rgba(255, 255, 255, 0.5);
+  color: var(--text-tertiary);
+  opacity: 0.5;
+  letter-spacing: 0.02em;
+  flex-shrink: 0;
 }
 
 .shelf-item__remove {
-  position: absolute;
-  top: -5px;
-  right: -5px;
   width: 18px;
   height: 18px;
   border-radius: 50%;
-  background: white;
-  border: 1px solid rgba(0,0,0,0.1);
+  background: rgba(0, 0, 0, 0.05);
+  border: none;
   color: var(--text-secondary);
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  opacity: 0;
   transition: all 0.15s;
-  z-index: 5;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  flex-shrink: 0;
+}
+
+.shelf-item:hover .shelf-item__remove {
+  opacity: 1;
 }
 
 .shelf-item__remove:hover {
   background: var(--danger);
   color: white;
-  border-color: transparent;
 }
 
-.shelf-item__drag-hint {
-  position: absolute;
-  top: 4px;
-  left: 4px;
-  color: rgba(255,255,255,0.35);
-}
-
-.shelf-item__name {
-  font-size: 10px;
-  color: var(--text-secondary);
-  text-align: center;
-  max-width: 72px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  line-height: 1.3;
+.shelf-item__drag-handle {
+  display: none; /* Hide in pill mode to save space */
 }
 
 /* ─── Context Menu ────────────────────────────────────── */
@@ -477,7 +480,7 @@ html, body {
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--text-tertiary);
+  color: white;
   padding: 0 4px;
 }
 
@@ -505,7 +508,7 @@ html, body {
 
 .settings__row-desc {
   font-size: 11px;
-  color: var(--text-tertiary);
+  color: white;
 }
 
 /* ─── Toggle ──────────────────────────────────────────── */
@@ -580,7 +583,7 @@ html, body {
 
 .settings__tip p {
   font-size: 11px;
-  color: var(--text-tertiary);
+  color: white;
   line-height: 1.45;
 }
 

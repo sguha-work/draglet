@@ -29,7 +29,7 @@ export async function createShelfWindow(): Promise<BrowserWindow> {
     alwaysOnTop: true,
     hasShadow: true,
     roundedCorners: true,
-    opacity: 0.7,
+    opacity: 0.8,
     ...(process.platform === 'darwin'
       ? { vibrancy: 'under-window', visualEffectState: 'active', titleBarStyle: 'hidden' }
       : {}),

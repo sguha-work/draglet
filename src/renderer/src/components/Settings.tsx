@@ -1,10 +1,11 @@
 import React, { useCallback, useEffect, useState } from 'react'
 
 interface Props {
+  initialSection?: string
   onClose: () => void
 }
 
-export default function Settings({ onClose }: Props): React.ReactElement {
+export default function Settings({ initialSection, onClose }: Props): React.ReactElement {
   const [startupEnabled, setStartupEnabled] = useState(false)
   const [saving, setSaving] = useState(false)
 
@@ -13,6 +14,15 @@ export default function Settings({ onClose }: Props): React.ReactElement {
       setStartupEnabled(s.startupEnabled)
     })
   }, [])
+
+  useEffect(() => {
+    if (initialSection) {
+      const el = document.getElementById(initialSection)
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth' })
+      }
+    }
+  }, [initialSection])
 
   const handleStartupToggle = useCallback(async () => {
     const next = !startupEnabled
@@ -43,7 +53,7 @@ export default function Settings({ onClose }: Props): React.ReactElement {
       </div>
 
       <div className="settings__content">
-        <section className="settings__section">
+        <section className="settings__section" id="general">
           <h3 className="settings__section-title">General</h3>
 
           <div className="settings__row">
@@ -61,7 +71,7 @@ export default function Settings({ onClose }: Props): React.ReactElement {
           </div>
         </section>
 
-        <section className="settings__section">
+        <section className="settings__section" id="how-it-works">
           <h3 className="settings__section-title">How it works</h3>
           <div className="settings__tips">
             <div className="settings__tip">
@@ -95,7 +105,18 @@ export default function Settings({ onClose }: Props): React.ReactElement {
           </div>
         </section>
 
-        <section className="settings__section settings__section--about">
+        <section className="settings__section" id="about-creator">
+          <h3 className="settings__section-title">About the Creator</h3>
+          <div className="settings__row">
+            <div className="settings__row-label">
+              <span className="settings__row-title">Sahasrangshu Guha</span>
+              <span className="settings__row-desc">sguha1988.life@gmail.com</span>
+              <span className="settings__row-desc">GitHub: sguha-work</span>
+            </div>
+          </div>
+        </section>
+
+        <section className="settings__section settings__section--about" id="about-app">
           <div className="settings__about">
             <div className="settings__about-logo">
               <svg width="28" height="28" viewBox="0 0 24 24" fill="none">

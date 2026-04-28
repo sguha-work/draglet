@@ -141,8 +141,8 @@ export default function ShelfItem({ item, onRemove, columnIndex }: Props): React
     return () => window.removeEventListener('click', handler)
   }, [contextMenu])
 
-  const shortName =
-    item.name.length > 12 ? item.name.slice(0, 9) + '…' + (item.ext || '') : item.name
+  const truncatedName = item.name.length > 5 ? item.name.slice(0, 5) + '...' : item.name
+  const displayName = hovered ? item.name : truncatedName
 
   return (
     <div
@@ -157,54 +157,25 @@ export default function ShelfItem({ item, onRemove, columnIndex }: Props): React
       onContextMenu={handleContextMenu}
       title={item.name}
     >
-      {/* Thumbnail */}
-      <div className="shelf-item__thumb" style={{ borderColor: color + '40' }}>
-        {hasPreview ? (
-          <img src={item.previewDataUrl!} alt={item.name} className="shelf-item__preview-img" />
-        ) : hasIcon ? (
-          <img src={item.iconDataUrl!} alt={item.name} className="shelf-item__icon-img" />
-        ) : (
-          <div className="shelf-item__fallback-icon" style={{ color }}>
-            <CategoryIcon category={category} />
-          </div>
-        )}
-
-        {/* Ext badge */}
-        {item.ext && (
-          <div className="shelf-item__badge" style={{ background: color + '22', color }}>
-            {item.ext.slice(1).toUpperCase()}
-          </div>
-        )}
-
-        {/* Remove button */}
-        {hovered && (
-          <button
-            className="shelf-item__remove"
-            onClick={(e) => {
-              e.stopPropagation()
-              onRemove()
-            }}
-          >
-            <svg width="8" height="8" viewBox="0 0 8 8" fill="none">
-              <path d="M1 1L7 7M7 1L1 7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-            </svg>
-          </button>
-        )}
-
-        {/* Drag handle indicator */}
-        {hovered && (
-          <div className="shelf-item__drag-hint">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
-              <circle cx="9" cy="5" r="1.5" /><circle cx="15" cy="5" r="1.5" />
-              <circle cx="9" cy="12" r="1.5" /><circle cx="15" cy="12" r="1.5" />
-              <circle cx="9" cy="19" r="1.5" /><circle cx="15" cy="19" r="1.5" />
-            </svg>
-          </div>
-        )}
+      <div className="shelf-item__pill" style={{ '--item-color': color } as React.CSSProperties}>
+        <div className="shelf-item__content">
+          <span className="shelf-item__name">{displayName}</span>
+          {item.ext && !hovered && <span className="shelf-item__ext">{item.ext.slice(1).toUpperCase()}</span>}
+        </div>
+        
+        <button
+          className="shelf-item__remove"
+          onClick={(e) => {
+            e.stopPropagation()
+            onRemove()
+          }}
+          title="Remove"
+        >
+          <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+            <path d="M2 2L8 8M8 2L2 8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+          </svg>
+        </button>
       </div>
-
-      {/* Name */}
-      <span className="shelf-item__name">{shortName}</span>
 
       {/* Context menu */}
       {contextMenu && (

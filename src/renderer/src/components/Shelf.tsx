@@ -3,7 +3,7 @@ import ShelfItem from './ShelfItem'
 import type { ShelfItem as ShelfItemType } from '../../../shared/types'
 
 interface Props {
-  onOpenSettings: () => void
+  onOpenSettings: (section?: string) => void
 }
 
 export default function Shelf({ onOpenSettings }: Props): React.ReactElement {
@@ -86,7 +86,7 @@ export default function Shelf({ onOpenSettings }: Props): React.ReactElement {
           <div className="shelf__logo">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
               <path
-                d="M3 8L12 3L21 8V16L12 21L3 16V8Z"
+                d="M5 4H12C17 4 20 7 20 12C20 17 17 20 12 20H5V4ZM8 7V17H11C14 17 16 15 16 12C16 9 14 7 11 7H8Z"
                 fill="url(#gradient)"
                 stroke="none"
               />
@@ -98,13 +98,26 @@ export default function Shelf({ onOpenSettings }: Props): React.ReactElement {
               </defs>
             </svg>
           </div>
-          <span className="shelf__title">Draglet</span>
         </div>
         <div
           className="shelf__header-right"
           style={{ WebkitAppRegion: 'no-drag' } as React.CSSProperties}
         >
-          <button className="shelf__btn shelf__btn--icon" onClick={onOpenSettings} title="Settings">
+          <button 
+            className="shelf__btn shelf__btn--icon" 
+            onClick={() => onOpenSettings('how-it-works')} 
+            title="How it works"
+          >
+            💡
+          </button>
+          <button 
+            className="shelf__btn shelf__btn--icon" 
+            onClick={() => onOpenSettings('about-creator')} 
+            title="About the Creator"
+          >
+            👤
+          </button>
+          <button className="shelf__btn shelf__btn--icon" onClick={() => onOpenSettings()} title="Settings">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <circle cx="12" cy="12" r="3" />
               <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
