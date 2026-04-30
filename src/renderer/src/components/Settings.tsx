@@ -111,7 +111,7 @@ export default function Settings({ initialSection, onClose }: Props): React.Reac
             <div className="settings__row-label">
               <span className="settings__row-title">Sahasrangshu Guha</span>
               <span className="settings__row-desc">sguha1988.life@gmail.com</span>
-              <span className="settings__row-desc">GitHub: sguha-work</span>
+              <span className="settings__row-desc">GitHub: <a target='_blank' href='https://github.com/sguha-work'>sguha-work</a></span>
             </div>
           </div>
         </section>
