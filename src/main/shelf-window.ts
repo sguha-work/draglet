@@ -17,8 +17,8 @@ export async function createShelfWindow(): Promise<BrowserWindow> {
     maxWidth: WINDOW_WIDTH,
     minHeight: WINDOW_HEIGHT,
     maxHeight: WINDOW_HEIGHT,
-    x: width - WINDOW_WIDTH - 24,
-    y: Math.floor((height - WINDOW_HEIGHT) / 2),
+    x: Math.floor((width - WINDOW_WIDTH) / 2),
+    y: 24,
     show: false,
     frame: false,
     transparent: true,
@@ -75,19 +75,8 @@ export function getShelfWindow(): BrowserWindow | null {
 export function showShelf(position?: { x: number; y: number }): void {
   if (!shelfWindow || shelfWindow.isDestroyed()) return
 
-  if (position) {
-    const display = screen.getDisplayNearestPoint(position)
-    const { x: dx, y: dy, width: dw, height: dh } = display.workArea
-
-    let wx = position.x + 20
-    let wy = position.y - WINDOW_HEIGHT / 2
-
-    if (wx + WINDOW_WIDTH > dx + dw) wx = position.x - WINDOW_WIDTH - 20
-    if (wy < dy) wy = dy + 8
-    if (wy + WINDOW_HEIGHT > dy + dh) wy = dy + dh - WINDOW_HEIGHT - 8
-
-    shelfWindow.setPosition(Math.round(wx), Math.round(wy))
-  }
+  // The shelf now defaults to top-middle and is draggable. 
+  // We no longer move it to the cursor position to keep placement predictable.
 
   shelfWindow.showInactive()
   shelfWindow.setAlwaysOnTop(true, 'floating')
