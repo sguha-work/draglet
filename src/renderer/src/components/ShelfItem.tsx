@@ -157,7 +157,13 @@ export default function ShelfItem({ item, onRemove, columnIndex }: Props): React
       onContextMenu={handleContextMenu}
       title={item.name}
     >
-      <div className="shelf-item__pill" style={{ '--item-color': color } as React.CSSProperties}>
+      <div 
+        className="shelf-item__pill" 
+        style={{ 
+          '--item-color': color,
+          '--column-index': columnIndex 
+        } as React.CSSProperties}
+      >
         <div className="shelf-item__content">
           <span className="shelf-item__name">{displayName}</span>
           {item.ext && !hovered && <span className="shelf-item__ext">{item.ext.slice(1).toUpperCase()}</span>}

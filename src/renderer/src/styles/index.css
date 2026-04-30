@@ -293,7 +293,7 @@ html, body {
   align-items: center;
   gap: 6px;
   padding: 0 8px;
-  transition: width 0.2s ease, background 0.2s, box-shadow 0.2s;
+  transition: width 0.25s ease, left 0.25s ease, background 0.2s, box-shadow 0.2s;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
   backdrop-filter: blur(10px);
   cursor: grab;
@@ -307,12 +307,13 @@ html, body {
 }
 
 .shelf-item:hover .shelf-item__pill {
-  width: max-content;
-  max-width: 220px;
+  width: calc(300% + 12px);
+  left: calc(var(--column-index) * -1 * (100% + 6px));
   background: white;
   border-color: var(--item-color);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
   overflow: visible;
+  z-index: 100;
 }
 
 .shelf-item__icon-container {
