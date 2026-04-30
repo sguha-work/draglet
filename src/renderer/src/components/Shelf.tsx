@@ -2,72 +2,114 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 import ShelfItem from './ShelfItem'
 import type { ShelfItem as ShelfItemType } from '../../../shared/types'
 
+/**
+ * Props for the Shelf component
+ * @property {(section?: string) => void} onOpenSettings - Callback to switch to the settings view
+ */
 interface Props {
   onOpenSettings: (section?: string) => void
 }
 
+/**
+ * Main Shelf component that manages the list of dragged items.
+ * Acts as the drop zone and container for ShelfItem pills.
+ */
 export default function Shelf({ onOpenSettings }: Props): React.ReactElement {
+  // State for items currently on the shelf
   const [items, setItems] = useState<ShelfItemType[]>([])
+  // State to track if a file is being dragged over the shelf
   const [isDragOver, setIsDragOver] = useState(false)
+  // State to track initial data load from disk
   const [isLoaded, setIsLoaded] = useState(false)
+  
+  // Reference to the main container for drag-leave detection
   const dropZoneRef = useRef<HTMLDivElement>(null)
 
+  /**
+   * Initial data fetch and real-time update subscription
+   */
   useEffect(() => {
+    // Load existing items from the persistent store (Electron main process)
     window.api.shelf.getItems().then((data: ShelfItemType[]) => {
       setItems(data)
       setIsLoaded(true)
     })
 
+    // Listen for updates from the main process (e.g., items added via shake-to-drop)
     window.api.shelf.onItemsUpdated((data: unknown) => {
       setItems(data as ShelfItemType[])
     })
 
+    // Clean up event listener on unmount
     return () => {
       window.api.shelf.offItemsUpdated()
     }
   }, [])
 
+  /**
+   * Handle file hover over the shelf
+   */
   const handleDragOver = useCallback((e: React.DragEvent) => {
     e.preventDefault()
     e.stopPropagation()
+    // Indicate that dropping here will perform a copy operation
     e.dataTransfer.dropEffect = 'copy'
     setIsDragOver(true)
   }, [])
 
+  /**
+   * Handle drag leaving the shelf area
+   */
   const handleDragLeave = useCallback((e: React.DragEvent) => {
     e.preventDefault()
     e.stopPropagation()
+    // Only set drag-over to false if the mouse actually left the component area
+    // (not just entered a child element)
     if (dropZoneRef.current && !dropZoneRef.current.contains(e.relatedTarget as Node)) {
       setIsDragOver(false)
     }
   }, [])
 
+  /**
+   * Handle file drop onto the shelf
+   */
   const handleDrop = useCallback(async (e: React.DragEvent) => {
     e.preventDefault()
     e.stopPropagation()
     setIsDragOver(false)
 
+    // Extract file paths from the dropped files
     const paths: string[] = []
     for (const file of Array.from(e.dataTransfer.files)) {
       paths.push(file.path)
     }
 
+    // Add valid paths to the shelf via the main process
     if (paths.length > 0) {
       const updated = await window.api.shelf.addItems(paths)
       setItems(updated as ShelfItemType[])
     }
   }, [])
 
+  /**
+   * Remove a specific item from the shelf
+   */
   const handleRemoveItem = useCallback(async (id: string) => {
     const updated = await window.api.shelf.removeItem(id)
     setItems(updated as ShelfItemType[])
   }, [])
 
+  /**
+   * Clear all items from the shelf
+   */
   const handleClearAll = useCallback(async () => {
     await window.api.shelf.clear()
     setItems([])
   }, [])
 
+  /**
+   * Hide the shelf window
+   */
   const handleClose = useCallback(() => {
     window.api.shelf.hide()
   }, [])
@@ -80,7 +122,7 @@ export default function Shelf({ onOpenSettings }: Props): React.ReactElement {
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
     >
-      {/* Header */}
+      {/* Header with draggable region for window moving */}
       <div className="shelf__header" style={{ WebkitAppRegion: 'drag' } as React.CSSProperties}>
         <div className="shelf__header-left">
           <div className="shelf__logo">
@@ -99,6 +141,8 @@ export default function Shelf({ onOpenSettings }: Props): React.ReactElement {
             </svg>
           </div>
         </div>
+        
+        {/* Navigation Buttons */}
         <div
           className="shelf__header-right"
           style={{ WebkitAppRegion: 'no-drag' } as React.CSSProperties}
@@ -138,6 +182,7 @@ export default function Shelf({ onOpenSettings }: Props): React.ReactElement {
             <div className="shelf__spinner" />
           </div>
         ) : items.length === 0 ? (
+          // Empty State
           <div className={`shelf__empty ${isDragOver ? 'shelf__empty--active' : ''}`}>
             <div className="shelf__empty-icon">
               <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2">
@@ -154,6 +199,7 @@ export default function Shelf({ onOpenSettings }: Props): React.ReactElement {
             </p>
           </div>
         ) : (
+          // 3-Column Grid of Items
           <div className="shelf__grid">
             {items.map((item, index) => (
               <ShelfItem
@@ -167,7 +213,7 @@ export default function Shelf({ onOpenSettings }: Props): React.ReactElement {
         )}
       </div>
 
-      {/* Footer */}
+      {/* Footer Info */}
       {items.length > 0 && (
         <div className="shelf__footer">
           <span className="shelf__count">
@@ -179,7 +225,7 @@ export default function Shelf({ onOpenSettings }: Props): React.ReactElement {
         </div>
       )}
 
-      {/* Drag-over overlay */}
+      {/* Drop-over overlay (shown when shelf has items but a new drag is occurring) */}
       {isDragOver && items.length > 0 && (
         <div className="shelf__drop-overlay">
           <div className="shelf__drop-overlay-content">

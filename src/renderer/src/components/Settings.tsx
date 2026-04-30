@@ -1,22 +1,41 @@
 import React, { useCallback, useEffect, useState } from 'react'
 
+/**
+ * Props for the Settings component
+ * @property {string} initialSection - Optional ID of the section to scroll to on mount
+ * @property {() => void} onClose - Callback to return to the shelf view
+ */
 interface Props {
   initialSection?: string
   onClose: () => void
 }
 
+/**
+ * Settings view component.
+ * Allows users to configure application behavior (startup), view tutorials,
+ * and information about the application and its creator.
+ */
 export default function Settings({ initialSection, onClose }: Props): React.ReactElement {
+  // State for the "Launch at startup" setting
   const [startupEnabled, setStartupEnabled] = useState(false)
+  // Loading state during settings save operations
   const [saving, setSaving] = useState(false)
 
+  /**
+   * Fetch current settings from the main process on mount
+   */
   useEffect(() => {
     window.api.settings.get().then((s: { startupEnabled: boolean }) => {
       setStartupEnabled(s.startupEnabled)
     })
   }, [])
 
+  /**
+   * Handle deep-linking to specific settings sections
+   */
   useEffect(() => {
     if (initialSection) {
+      // Find the target section by ID and scroll it into view
       const el = document.getElementById(initialSection)
       if (el) {
         el.scrollIntoView({ behavior: 'smooth' })
@@ -24,10 +43,14 @@ export default function Settings({ initialSection, onClose }: Props): React.Reac
     }
   }, [initialSection])
 
+  /**
+   * Toggles the "Launch at startup" setting
+   */
   const handleStartupToggle = useCallback(async () => {
     const next = !startupEnabled
     setSaving(true)
     try {
+      // Persist the new setting to the OS (via main process)
       await window.api.settings.setStartup(next)
       setStartupEnabled(next)
     } finally {
@@ -37,6 +60,7 @@ export default function Settings({ initialSection, onClose }: Props): React.Reac
 
   return (
     <div className="settings">
+      {/* Header with back button and draggable handle */}
       <div className="settings__header" style={{ WebkitAppRegion: 'drag' } as React.CSSProperties}>
         <button
           className="shelf__btn shelf__btn--icon settings__back"
@@ -53,6 +77,7 @@ export default function Settings({ initialSection, onClose }: Props): React.Reac
       </div>
 
       <div className="settings__content">
+        {/* General Settings Section */}
         <section className="settings__section" id="general">
           <h3 className="settings__section-title">General</h3>
 
@@ -61,6 +86,7 @@ export default function Settings({ initialSection, onClose }: Props): React.Reac
               <span className="settings__row-title">Launch at startup</span>
               <span className="settings__row-desc">Open Draglet when you log in</span>
             </div>
+            {/* Custom Toggle Switch */}
             <button
               className={`toggle ${startupEnabled ? 'toggle--on' : ''} ${saving ? 'toggle--saving' : ''}`}
               onClick={handleStartupToggle}
@@ -71,6 +97,7 @@ export default function Settings({ initialSection, onClose }: Props): React.Reac
           </div>
         </section>
 
+        {/* User Guide Section */}
         <section className="settings__section" id="how-it-works">
           <h3 className="settings__section-title">How it works</h3>
           <div className="settings__tips">
@@ -105,6 +132,7 @@ export default function Settings({ initialSection, onClose }: Props): React.Reac
           </div>
         </section>
 
+        {/* Creator Info Section */}
         <section className="settings__section" id="about-creator">
           <h3 className="settings__section-title">About the Creator</h3>
           <div className="settings__row">
@@ -116,6 +144,7 @@ export default function Settings({ initialSection, onClose }: Props): React.Reac
           </div>
         </section>
 
+        {/* App Version Info Section */}
         <section className="settings__section settings__section--about" id="about-app">
           <div className="settings__about">
             <div className="settings__about-logo">

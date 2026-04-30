@@ -1,12 +1,19 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import type { ShelfItem as ShelfItemType } from '../../../shared/types'
 
+/**
+ * Props for the ShelfItem component
+ * @property {ShelfItemType} item - The file/folder item data from the shelf
+ * @property {() => void} onRemove - Callback function to remove the item from the shelf
+ * @property {number} columnIndex - The index of the column in the grid (0, 1, or 2)
+ */
 interface Props {
   item: ShelfItemType
   onRemove: () => void
   columnIndex: number
 }
 
+// Extension sets for file categorization to apply specific theme colors
 const IMAGE_EXTS = new Set(['.png', '.jpg', '.jpeg', '.gif', '.webp', '.bmp', '.svg', '.heic', '.ico'])
 const VIDEO_EXTS = new Set(['.mp4', '.mov', '.avi', '.mkv', '.webm', '.m4v'])
 const AUDIO_EXTS = new Set(['.mp3', '.wav', '.flac', '.aac', '.ogg', '.m4a', '.aiff'])
@@ -17,6 +24,11 @@ const CODE_EXTS = new Set(['.js', '.ts', '.jsx', '.tsx', '.py', '.rb', '.go', '.
 const ARCHIVE_EXTS = new Set(['.zip', '.tar', '.gz', '.rar', '.7z', '.iso', '.dmg'])
 const DESIGN_EXTS = new Set(['.psd', '.ai', '.fig', '.sketch', '.xd'])
 
+/**
+ * Categorizes a file based on its extension to determine UI styling
+ * @param {string} ext - The file extension (e.g., '.png')
+ * @returns {string} The category name
+ */
 function getFileCategory(ext: string): string {
   const e = ext.toLowerCase()
   if (IMAGE_EXTS.has(e)) return 'image'
@@ -33,6 +45,11 @@ function getFileCategory(ext: string): string {
   return 'file'
 }
 
+/**
+ * Returns the HSL color values associated with a file category
+ * @param {string} cat - The file category
+ * @returns {string} HSL values (e.g., '150, 70%, 50%')
+ */
 function getCategoryColor(cat: string): string {
   switch (cat) {
     case 'image': return '150, 70%, 50%' // Emerald
@@ -50,37 +67,57 @@ function getCategoryColor(cat: string): string {
   }
 }
 
-
-
+/**
+ * Individual item component representing a file or folder on the shelf.
+ * Handles drag-and-drop, context menus, and hover states.
+ */
 export default function ShelfItem({ item, onRemove, columnIndex }: Props): React.ReactElement {
   const [hovered, setHovered] = useState(false)
   const [contextMenu, setContextMenu] = useState(false)
+  
+  // Determine color based on file type
   const category = getFileCategory(item.ext)
   const color = getCategoryColor(category)
 
+  /**
+   * Initiates a native OS drag operation for the file
+   */
   const handleDragStart = useCallback(
     async (e: React.DragEvent) => {
       e.preventDefault()
+      // Call electron main process to start a proper file drag
       await window.api.shelf.dragStart(item.id)
     },
     [item.id]
   )
 
+  /**
+   * Opens the context menu
+   */
   const handleContextMenu = useCallback((e: React.MouseEvent) => {
     e.preventDefault()
     setContextMenu(true)
   }, [])
 
+  /**
+   * Opens the file using the OS default application
+   */
   const handleOpen = useCallback(() => {
     window.api.shelf.openItem(item.id)
     setContextMenu(false)
   }, [item.id])
 
+  /**
+   * Reveals the file in the OS file explorer (Finder/Explorer)
+   */
   const handleReveal = useCallback(() => {
     window.api.shelf.revealItem(item.id)
     setContextMenu(false)
   }, [item.id])
 
+  /**
+   * Close context menu when clicking anywhere else
+   */
   useEffect(() => {
     if (!contextMenu) return
     const handler = () => setContextMenu(false)
@@ -88,8 +125,11 @@ export default function ShelfItem({ item, onRemove, columnIndex }: Props): React
     return () => window.removeEventListener('click', handler)
   }, [contextMenu])
 
+  // Truncate name for the small pill view, show more on hover
   const truncatedName = item.name.length > 4 ? item.name.slice(0, 4) + '..' : item.name
-  const displayName = hovered ? (item.name.length>22?item.name.slice(0,22)+'...':item.name) : truncatedName
+  const displayName = hovered 
+    ? (item.name.length > 22 ? item.name.slice(0, 22) + '...' : item.name) 
+    : truncatedName
 
   return (
     <div
@@ -104,6 +144,7 @@ export default function ShelfItem({ item, onRemove, columnIndex }: Props): React
       onContextMenu={handleContextMenu}
       title={item.name}
     >
+      {/* The visible "pill" container */}
       <div 
         className="shelf-item__pill" 
         style={{ 
@@ -113,9 +154,11 @@ export default function ShelfItem({ item, onRemove, columnIndex }: Props): React
       >
         <div className="shelf-item__content">
           <span className="shelf-item__name">{displayName}</span>
-          {item.ext  && <span className="shelf-item__ext">{item.ext.slice(1).toUpperCase()}</span>}
+          {/* Always show extension text if available */}
+          {item.ext && <span className="shelf-item__ext">{item.ext.slice(1).toUpperCase()}</span>}
         </div>
         
+        {/* Remove button (visible on hover) */}
         <button
           className="shelf-item__remove"
           onClick={(e) => {
@@ -130,12 +173,13 @@ export default function ShelfItem({ item, onRemove, columnIndex }: Props): React
         </button>
       </div>
 
-      {/* Context menu */}
+      {/* Floating context menu */}
       {contextMenu && (
         <div 
           className="context-menu" 
           onClick={(e) => e.stopPropagation()}
           style={
+            // Adjust menu alignment based on grid position to prevent overflow
             columnIndex === 0 
               ? { left: '0', transform: 'none' } 
               : columnIndex === 2 
