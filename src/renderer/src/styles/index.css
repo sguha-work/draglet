@@ -273,6 +273,7 @@ html, body {
   position: relative;
   height: 28px;
   z-index: 1;
+  cursor: pointer;
 }
 
 .shelf-item:hover {

@@ -2,7 +2,7 @@
 
 **Draglet** is a premium, lightweight productivity utility for macOS and Windows, inspired by apps like Dropover. It provides a temporary "shelf" to stage files while you navigate between folders, applications, or browser tabs.
 
-![Draglet Banner](https://raw.githubusercontent.com/sguha-work/draglet/main/resources/banner.png) *(Placeholder for banner)*
+![Draglet Banner](https://raw.githubusercontent.com/sguha-work/draglet/main/resources/banner.png)
 
 ## ✨ Key Features
 
